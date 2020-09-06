@@ -34,7 +34,7 @@ public class Utility {
     public void changePassword(User user) {
         String[] newPasswords = new String[2];
         String[] feedbackMessages = {"Cannot reuse passwords", "Passwords do not match",
-                "Password updated successfully"};
+                "Password updated successfully", "Cannot use old passwords"};
 
         for (int i = 0; i < newPasswords.length; i++) {
             //add hashed input to array
@@ -42,6 +42,13 @@ public class Utility {
             //check if input matches original password
             if (newPasswords[i].equals(user.getPass())) {
                 System.out.println(feedbackMessages[i]);
+                return;
+            }
+        }
+        //check if input was used as a password in the past
+        for (int i = 0; i < user.getUsedPasswords().size(); i++) {
+            if (newPasswords[i].equals(user.getUsedPasswords().get(i))) {
+                System.out.println(feedbackMessages[3]);
                 return;
             }
         }
