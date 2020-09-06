@@ -5,7 +5,14 @@ public class RegisteredUsers extends Utility {
     public ArrayList<User> allUsers = new ArrayList<>();
 
     public void createUser() {
-        User user = new User(collectInput(credentialOptions[4]),
+        String creatingUser = collectInput(credentialOptions[4]);
+        for (User allUser : allUsers) {
+            if (creatingUser.equals(allUser.getName())) {
+                System.out.println("User already exists");
+                return;
+            }
+        }
+        User user = new User(creatingUser,
                 hashPassword(collectInput(credentialOptions[0])));
         System.out.printf("Adding %s...\n", user.getName());
         allUsers.add(user);

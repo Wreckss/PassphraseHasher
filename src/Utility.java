@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Utility {
 
-    public String[] credentialOptions = {"Enter your password:", "Enter your old password:",
+    public final String[] credentialOptions = {"Enter your password:", "Enter your old password:",
             "Enter your new password:", "Confirm your new password:", "Enter your username:"};
     public Scanner stdIn = new Scanner(System.in);
 
@@ -34,7 +34,7 @@ public class Utility {
     public void changePassword(User user) {
         String[] newPasswords = new String[2];
         String[] feedbackMessages = {"Cannot reuse passwords", "Passwords do not match",
-                "Password updated successfully", "Cannot use old passwords"};
+                "Password updated successfully"};
 
         for (int i = 0; i < newPasswords.length; i++) {
             //add hashed input to array
@@ -48,7 +48,7 @@ public class Utility {
         //check if input was used as a password in the past
         for (int i = 0; i < user.getUsedPasswords().size(); i++) {
             if (newPasswords[i].equals(user.getUsedPasswords().get(i))) {
-                System.out.println(feedbackMessages[3]);
+                System.out.println(feedbackMessages[0]);
                 return;
             }
         }
