@@ -123,7 +123,9 @@ public class Utility {
                     users.removeUser();
                     break;
                 case 4:
-                    users.logIn(gatherCredentials());
+                    if (users.checkSize()) {
+                        users.logIn(gatherCredentials());
+                    }
                     break;
                 case 5:
                     quit = exit();

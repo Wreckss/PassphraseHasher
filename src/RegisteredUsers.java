@@ -26,9 +26,7 @@ public class RegisteredUsers extends Utility {
     }
 
     public void printAllUsers() {
-        if (allUsers.isEmpty()) {
-            System.out.println("No users found");
-        } else {
+        if (checkSize()) {
             for (int i = 0; i < allUsers.size(); i++) {
                 System.out.printf("User #%s: %s\n", i + 1, allUsers.get(i).getName());
                 System.out.printf("Password: %s\n\n", allUsers.get(i).getPass());
@@ -36,13 +34,18 @@ public class RegisteredUsers extends Utility {
         }
     }
 
+    public boolean checkSize() {
+        if (allUsers.isEmpty()) {
+            System.out.println("No users found");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void removeUser() {
-        final String[] feedback = {
-                "Select which user to remove:",
-                "No users found"
-        };
-        if (!allUsers.isEmpty()) {
-            System.out.println(feedback[0]);
+        if (checkSize()) {
+            System.out.println("Select which user to remove:");
             printAllUsers();
             int menuOption = menuValidation(stdIn.next(), allUsers.toArray());
             if (menuOption > 0 && menuOption <= allUsers.size()) {
@@ -50,16 +53,16 @@ public class RegisteredUsers extends Utility {
                 System.out.printf("Removing %s...\n", allUsers.get(menuOption).getName());
                 allUsers.remove(menuOption);
             }
-        } else {
-            System.out.println(feedback[1]);
         }
     }
 
     public void logIn(String[] logInCredentials) {
-        final int foundIndex = checkUsername(logInCredentials[0]);
-        if (foundIndex != -1) {
-            if (comparePassword(allUsers.get(foundIndex), logInCredentials[1])) {
-                changePassword(allUsers.get(foundIndex));
+        if (checkSize()) {
+            final int foundIndex = checkUsername(logInCredentials[0]);
+            if (foundIndex != -1) {
+                if (comparePassword(allUsers.get(foundIndex), logInCredentials[1])) {
+                    changePassword(allUsers.get(foundIndex));
+                }
             }
         }
     }
