@@ -58,10 +58,10 @@ public class RegisteredUsers extends Utility {
 
     public void logIn(String[] logInCredentials) {
         if (checkSize()) {
-            final int foundIndex = checkUsername(logInCredentials[0]);
-            if (foundIndex != -1) {
-                if (comparePassword(allUsers.get(foundIndex), logInCredentials[1])) {
-                    changePassword(allUsers.get(foundIndex));
+            final int index = checkUsername(logInCredentials[0]);
+            if (index != -1) {
+                if (comparePassword(allUsers.get(index), logInCredentials[1])) {
+                    changePassword(allUsers.get(index));
                 }
             }
         }

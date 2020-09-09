@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Utility {
 
-    public Scanner stdIn = new Scanner(System.in);
+    public final Scanner stdIn = new Scanner(System.in);
     public final String[] credentialOptions = {
             "Enter your password:",
             "Enter your old password:",
@@ -42,13 +42,12 @@ public class Utility {
     }
 
     public void changePassword(User user) {
-        String[] newPasswords = new String[2];
+        final String[] newPasswords = new String[2];
         final String[] feedbackMessages = {
                 "Cannot reuse passwords",
                 "Passwords do not match",
                 "Password updated successfully"
         };
-
         for (int i = 0; i < newPasswords.length; i++) {
             //add hashed input to array
             newPasswords[i] = hashPassword(collectInput(credentialOptions[i + 2]));
@@ -94,6 +93,7 @@ public class Utility {
         }
         return feedback[4];
     }
+
     public void menu() {
         final RegisteredUsers users = new RegisteredUsers();
         boolean quit = false;
@@ -105,8 +105,8 @@ public class Utility {
                 "Exit"
         };
         //user created for testing
-        User demoUser = new User("xxxx", hashPassword("ffff"));
-        users.allUsers.add(demoUser);
+//        User demoUser = new User("xxxx", hashPassword("ffff"));
+//        users.allUsers.add(demoUser);
         do {
             for (int i = 0; i < menuOptions.length; i++) {
                 System.out.printf("%s. %s\n", i + 1, menuOptions[i]);
