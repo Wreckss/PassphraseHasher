@@ -4,18 +4,13 @@ public class RegisteredUsers extends Utility {
 
     public ArrayList<User> allUsers = new ArrayList<>();
 
-    public void createUser() {
-        final String[] freshCredentials = {
-                collectInput(credentialOptions[4]),
-                hashPassword(collectInput(credentialOptions[0]))
-        };
+    public void createUser(String[] freshCredentials) {
         if (checkUsername(freshCredentials[0]) == -1) {
             User freshUser = new User(freshCredentials[0], freshCredentials[1]);
             System.out.printf("Adding %s...\n", freshUser.getName());
             allUsers.add(freshUser);
         } else {
             System.out.println("User already exists");
-
         }
     }
 
@@ -60,31 +55,11 @@ public class RegisteredUsers extends Utility {
         }
     }
 
-//    private String[] gatherCredentials() {
-//
-//    }
-
-    public void logIn() {
-        final String[] feedback = {
-                "Password incorrect",
-                "User not found"
-        };
-        final String[] logInCredentials = {
-                collectInput(credentialOptions[4]),                   //login username attempt
-                hashPassword(collectInput(credentialOptions[0]))      //login password attempt
-        };
+    public void logIn(String[] logInCredentials) {
         final int foundIndex = checkUsername(logInCredentials[0]);
         if (foundIndex != -1) {
             if (comparePassword(allUsers.get(foundIndex), logInCredentials[1])) {
                 changePassword(allUsers.get(foundIndex));
-            } else {
-                System.out.println(feedback[0]);
-            }
-        } else {
-            if (allUsers.isEmpty()) {
-                System.out.println("No users found");
-            } else {
-                System.out.println("User already exists");
             }
         }
     }

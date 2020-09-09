@@ -86,7 +86,7 @@ public class Utility {
             MessageDigest md = MessageDigest.getInstance(feedback[0]);
             md.update(rawInput.getBytes(StandardCharsets.UTF_8));
             byte[] digest = md.digest();
-            //add hashed output
+            //format hashed output, add to placeholder index
             feedback[4] = String.format(feedback[1], new BigInteger(1, digest));
         } catch (NoSuchAlgorithmException ae) {
             System.out.println(feedback[2]);
@@ -101,7 +101,7 @@ public class Utility {
                 "Create new user",
                 "Print user credentials",
                 "Remove a user",
-                "Change password",
+                "Reset password",
                 "Exit"
         };
         //user created for testing
@@ -114,7 +114,7 @@ public class Utility {
             int menuOption = menuValidation(stdIn.next(), menuOptions);
             switch (menuOption) {
                 case 1:
-                    users.createUser();
+                    users.createUser(gatherCredentials());
                     break;
                 case 2:
                     users.printAllUsers();
@@ -123,7 +123,7 @@ public class Utility {
                     users.removeUser();
                     break;
                 case 4:
-                    users.logIn();
+                    users.logIn(gatherCredentials());
                     break;
                 case 5:
                     quit = exit();
@@ -132,6 +132,13 @@ public class Utility {
                     //menuValidation() makes default unnecessary
             }
         } while (!quit);
+    }
+
+    private String[] gatherCredentials() {
+        return new String[] {
+                collectInput(credentialOptions[4]),                   //login username attempt
+                hashPassword(collectInput(credentialOptions[0]))      //login password attempt
+        };
     }
 
     private boolean exit() {
