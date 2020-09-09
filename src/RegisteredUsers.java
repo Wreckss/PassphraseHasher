@@ -5,17 +5,29 @@ public class RegisteredUsers extends Utility {
     public ArrayList<User> allUsers = new ArrayList<>();
 
     public void createUser() {
-        String creatingUser = collectInput(credentialOptions[4]);
-        for (User allUser : allUsers) {
-            if (creatingUser.equals(allUser.getName())) {
-                System.out.println("User already exists");
-                return;
+        final String[] freshCredentials = {
+                collectInput(credentialOptions[4]),
+                hashPassword(collectInput(credentialOptions[0]))
+        };
+        if (checkUsername(freshCredentials[0]) == -1) {
+            User freshUser = new User(freshCredentials[0], freshCredentials[1]);
+            System.out.printf("Adding %s...\n", freshUser.getName());
+            allUsers.add(freshUser);
+        } else {
+            System.out.println("User already exists");
+
+        }
+    }
+
+    private int checkUsername(String usernameAttempt) {
+        int foundIndex = -1;
+        for (int i = 0; i < allUsers.size(); i++) {
+            if (usernameAttempt.equals(allUsers.get(i).getName())) {
+                foundIndex = i;
+                return foundIndex;
             }
         }
-        User user = new User(creatingUser,
-                hashPassword(collectInput(credentialOptions[0])));
-        System.out.printf("Adding %s...\n", user.getName());
-        allUsers.add(user);
+        return foundIndex;
     }
 
     public void printAllUsers() {
@@ -30,7 +42,10 @@ public class RegisteredUsers extends Utility {
     }
 
     public void removeUser() {
-        String[] feedback = new String[]{"Select which user to remove:", "No users found"};
+        final String[] feedback = {
+                "Select which user to remove:",
+                "No users found"
+        };
         if (!allUsers.isEmpty()) {
             System.out.println(feedback[0]);
             printAllUsers();
@@ -45,25 +60,32 @@ public class RegisteredUsers extends Utility {
         }
     }
 
-    public void logIn() {
-        String[] feedback = {"Password incorrect", "User not found"};
-        String[] logInCredentials = {collectInput(credentialOptions[4]),
-                collectInput(credentialOptions[0])};
+//    private String[] gatherCredentials() {
+//
+//    }
 
-        int foundIndex = -1;
-        for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getName().equals(logInCredentials[0])) {
-                foundIndex = i;
-            }
-        }
-        if (foundIndex > -1 && foundIndex < allUsers.size()) {
-            if (checkPassword(allUsers.get(foundIndex), logInCredentials[1])) {
+    public void logIn() {
+        final String[] feedback = {
+                "Password incorrect",
+                "User not found"
+        };
+        final String[] logInCredentials = {
+                collectInput(credentialOptions[4]),                   //login username attempt
+                hashPassword(collectInput(credentialOptions[0]))      //login password attempt
+        };
+        final int foundIndex = checkUsername(logInCredentials[0]);
+        if (foundIndex != -1) {
+            if (comparePassword(allUsers.get(foundIndex), logInCredentials[1])) {
                 changePassword(allUsers.get(foundIndex));
             } else {
                 System.out.println(feedback[0]);
             }
         } else {
-            System.out.println(feedback[1]);
+            if (allUsers.isEmpty()) {
+                System.out.println("No users found");
+            } else {
+                System.out.println("User already exists");
+            }
         }
     }
 

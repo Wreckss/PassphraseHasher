@@ -6,9 +6,14 @@ import java.util.Scanner;
 
 public class Utility {
 
-    public final String[] credentialOptions = {"Enter your password:", "Enter your old password:",
-            "Enter your new password:", "Confirm your new password:", "Enter your username:"};
     public Scanner stdIn = new Scanner(System.in);
+    public final String[] credentialOptions = {
+            "Enter your password:",
+            "Enter your old password:",
+            "Enter your new password:",
+            "Confirm your new password:",
+            "Enter your username:"
+    };
 
     public String collectInput(String filler) {
         String input;
@@ -27,14 +32,22 @@ public class Utility {
         return false;
     }
 
-    public boolean checkPassword(User user, String attempt) {
-        return hashPassword(attempt).equals(user.getPass());
+    public boolean comparePassword(User user, String attempt) {
+        if (user.getPass().equals(attempt)) {
+            return true;
+        } else {
+            System.out.println("Password incorrect");
+            return false;
+        }
     }
 
     public void changePassword(User user) {
         String[] newPasswords = new String[2];
-        String[] feedbackMessages = {"Cannot reuse passwords", "Passwords do not match",
-                "Password updated successfully"};
+        final String[] feedbackMessages = {
+                "Cannot reuse passwords",
+                "Passwords do not match",
+                "Password updated successfully"
+        };
 
         for (int i = 0; i < newPasswords.length; i++) {
             //add hashed input to array
@@ -61,12 +74,19 @@ public class Utility {
         }
     }
 
-    public String hashPassword(String unhashed) {
-        String[] feedback = new String[]{"SHA-256", "%064x", "Failed to hash password", "Failed", ""};
+    public String hashPassword(String rawInput) {
+        final String[] feedback = {
+                "SHA-256",
+                "%064x",
+                "Failed to hash password",
+                "Failed",
+                ""          //used to hold the hashed output before return
+        };
         try {
             MessageDigest md = MessageDigest.getInstance(feedback[0]);
-            md.update(unhashed.getBytes(StandardCharsets.UTF_8));
+            md.update(rawInput.getBytes(StandardCharsets.UTF_8));
             byte[] digest = md.digest();
+            //add hashed output
             feedback[4] = String.format(feedback[1], new BigInteger(1, digest));
         } catch (NoSuchAlgorithmException ae) {
             System.out.println(feedback[2]);
@@ -75,14 +95,18 @@ public class Utility {
         return feedback[4];
     }
     public void menu() {
-        String[] menuOptions = {"Create new user", "Print credentials", "Remove a user",
-                "Change password", "Exit"};
-        RegisteredUsers users = new RegisteredUsers();
+        final RegisteredUsers users = new RegisteredUsers();
         boolean quit = false;
-
+        final String[] menuOptions = {
+                "Create new user",
+                "Print user credentials",
+                "Remove a user",
+                "Change password",
+                "Exit"
+        };
+        //user created for testing
         User demoUser = new User("xxxx", hashPassword("ffff"));
         users.allUsers.add(demoUser);
-
         do {
             for (int i = 0; i < menuOptions.length; i++) {
                 System.out.printf("%s. %s\n", i + 1, menuOptions[i]);
@@ -105,7 +129,7 @@ public class Utility {
                     quit = exit();
                     break;
                 default:
-                    //really dont need anything here
+                    //menuValidation() makes default unnecessary
             }
         } while (!quit);
     }
